@@ -7,6 +7,7 @@ from api_client import (
     check_api_health,
     explain_claim,
     predict_claim_risk,
+    get_prediction_audit_logs,
 )
 from dashboard_utils import (
     format_currency,
@@ -668,39 +669,63 @@ def render_reinsurance_tab():
 def render_prediction_audit_tab():
     st.subheader("Prediction Audit Log")
 
-    df = load_prediction_logs()
-
-    if df.empty:
-        st.warning("No prediction logs found yet. Run a prediction first.")
+    try:
+        records = get_prediction_audit_logs(limit=100)
+    except Exception as exc:
+        st.warning(f"Unable to load backend audit logs: {exc}")
         return
 
-    df = df.sort_values("prediction_timestamp_utc", ascending=False)
+    if not records:
+        st.info("No prediction logs found yet. Run a real-time prediction first.")
+        return
 
-    st.markdown("#### Filters")
+    df = pd.DataFrame(records)
 
-    col1, col2, col3 = st.columns(3)
+    if df.empty:
+        st.info("No prediction logs found yet. Run a real-time prediction first.")
+        return
+
+    st.markdown("#### Recent Backend Predictions")
+
+    display_columns = [
+        "prediction_timestamp_utc",
+        "claim_id",
+        "severity_prediction",
+        "fraud_risk_prediction",
+        "fraud_risk_probability",
+        "recommended_reserve",
+        "triage_priority",
+        "retention_breach_flag",
+        "calculated_ceded_loss",
+        "high_priority_claim_flag",
+    ]
+
+    display_columns = [col for col in display_columns if col in df.columns]
+
+    col1, col2 = st.columns(2)
 
     with col1:
-        triage_options = ["All"] + sorted(df["triage_priority"].dropna().unique().tolist())
-        triage_filter = st.selectbox("Triage Priority", triage_options)
+        max_rows = st.slider("Rows to display", 10, 100, 50)
 
     with col2:
-        max_rows = st.slider("Rows to display", 10, 500, 50)
-
-    with col3:
-        high_priority_only = st.checkbox("High priority only", value=False)
+        if "triage_priority" in df.columns:
+            triage_options = ["All"] + sorted(df["triage_priority"].dropna().unique().tolist())
+            triage_filter = st.selectbox("Triage Priority", triage_options)
+        else:
+            triage_filter = "All"
 
     filtered_df = df.copy()
 
     if triage_filter != "All":
         filtered_df = filtered_df[filtered_df["triage_priority"] == triage_filter]
 
-    if high_priority_only and "high_priority_claim_flag" in filtered_df.columns:
-        filtered_df = filtered_df[filtered_df["high_priority_claim_flag"] == 1]
-
     filtered_df = filtered_df.head(max_rows)
 
-    st.table(filtered_df)
+    st.dataframe(
+        filtered_df[display_columns],
+        use_container_width=True,
+        hide_index=True,
+    )
 
     if "triage_priority" in filtered_df.columns:
         fig = px.histogram(
@@ -720,8 +745,8 @@ def render_prediction_audit_tab():
         st.plotly_chart(fig, use_container_width=True)
 
     st.caption(
-        "Prediction logs are append-only locally. In production, this would be partitioned "
-        "by date in a Delta table or log analytics store with retention policies."
+        "Audit logs are read from the FastAPI backend. In production, this would usually come from "
+        "a database, Delta table, or centralized logging store."
     )
 
 

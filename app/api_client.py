@@ -33,6 +33,15 @@ def get_model_info() -> dict:
     response.raise_for_status()
     return response.json()
 
+def get_prediction_audit_logs(limit: int = 50) -> list[dict]:
+    response = requests.get(
+        f"{API_BASE_URL}/predict/audit-logs",
+        params={"limit": limit},
+        timeout=30,
+    )
+    response.raise_for_status()
+    return response.json().get("records", [])
+
 
 def check_api_health() -> bool:
     try:
