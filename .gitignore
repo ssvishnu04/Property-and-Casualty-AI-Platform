@@ -17,7 +17,7 @@ data/bronze/
 data/silver/
 data/gold/
 data/prediction_logs/
-data/model_artifacts/
+##data/model_artifacts/
 
 reports/
 mlruns/

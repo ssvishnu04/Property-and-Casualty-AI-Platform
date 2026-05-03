@@ -1,0 +1,20 @@
+{
+  "severity": {
+    "model_name": "DecisionTreeClassifier",
+    "metric": "f1",
+    "score": 1.0,
+    "artifact_path": "data\\model_artifacts\\severity_champion.pkl"
+  },
+  "fraud": {
+    "model_name": "DecisionTreeClassifier",
+    "metric": "recall",
+    "score": 1.0,
+    "artifact_path": "data\\model_artifacts\\fraud_champion.pkl"
+  },
+  "reserve": {
+    "model_name": "RidgeRegression",
+    "metric": "rmse",
+    "score": 101106.0999875727,
+    "artifact_path": "data\\model_artifacts\\reserve_champion.pkl"
+  }
+}
