@@ -1,0 +1,6 @@
+column,metric_type,baseline_top_category,current_top_category,baseline_top_share,current_top_share,top_share_change,drift_detected,baseline_mean,current_mean,mean_change_pct
+severity_prediction,prediction_distribution,High,High,0.7270306258322237,0.5454545454545454,-0.18157608037767825,False,,,
+fraud_risk_prediction,prediction_distribution,1,0,0.844207723035952,0.7272727272727273,-0.11693499576322475,True,,,
+fraud_risk_probability,numeric_prediction,,,,,,True,0.844207723035952,0.2727272727272727,-0.6769429308861485
+recommended_reserve,numeric_prediction,,,,,,True,628446.340161766,468593.66181818186,-0.25436169825165517
+triage_priority,prediction_distribution,Urgent,Urgent,0.9374167776298269,0.8181818181818182,-0.11923495944800866,False,,,

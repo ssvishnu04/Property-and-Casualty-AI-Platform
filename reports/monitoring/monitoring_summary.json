@@ -1,0 +1,10 @@
+{
+  "monitoring_timestamp_utc": "2026-05-01T20:38:21Z",
+  "status": "review_required",
+  "baseline_record_count": 751,
+  "current_prediction_record_count": 11,
+  "feature_drift_count": 12,
+  "prediction_drift_count": 3,
+  "feature_drift_report_path": "reports\\monitoring\\feature_drift_report.csv",
+  "prediction_drift_report_path": "reports\\monitoring\\prediction_drift_report.csv"
+}
