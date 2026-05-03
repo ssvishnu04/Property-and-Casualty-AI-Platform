@@ -1,0 +1,18 @@
+<ACORDClaimNotice>
+    <ClaimId>CLM-TEST-XML-001</ClaimId>
+    <PolicyId>POL-TEST-XML-001</PolicyId>
+    <TreatyId>TRT-TEST-XML-001</TreatyId>
+    <LineOfBusiness>Commercial Property</LineOfBusiness>
+    <LossType>Hail</LossType>
+    <State>TX</State>
+    <LossDate>2026-04-15</LossDate>
+    <ClaimAmount>425000</ClaimAmount>
+    <ReserveAmount>500000</ReserveAmount>
+    <PriorClaimCount>2</PriorClaimCount>
+    <LitigationFlag>0</LitigationFlag>
+    <CatExposure>1</CatExposure>
+    <SuspiciousFlag>0</SuspiciousFlag>
+    <TreatyType>Excess of Loss</TreatyType>
+    <Retention>250000</Retention>
+    <TreatyLimit>2000000</TreatyLimit>
+</ACORDClaimNotice>

@@ -1,0 +1,9 @@
+Quota Share Reinsurance Treaty
+
+Structure:
+- Insurer retains 60%
+- Reinsurer takes 40%
+
+Implications:
+- All claims are shared proportionally
+- Reduces volatility for insurer

@@ -1,0 +1,3 @@
+Claim CLM-TEST-FRAUD-EMAIL-001 has inconsistent documentation and late reporting.
+The claimant changed the loss description multiple times. Prior claims are noted.
+The adjuster recommends possible SIU review due to suspicious indicators.

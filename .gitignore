@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Runtime/generated data
+data/local_landing/
+data/bronze/
+data/silver/
+data/gold/
+data/prediction_logs/
+data/model_artifacts/
+
+reports/
+mlruns/
+mlflow.db
+
+# OS/editor
+.DS_Store
+.vscode/

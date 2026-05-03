@@ -1,0 +1,14 @@
+Auto Insurance Policy
+
+Coverage:
+- Collision
+- Comprehensive
+- Liability
+
+Risk Indicators:
+- Frequent claims may indicate risky driving behavior
+- Suspicious patterns require investigation
+
+Claims Handling:
+- Large losses require inspection
+- Injury claims may involve litigation

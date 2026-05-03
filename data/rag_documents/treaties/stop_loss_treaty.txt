@@ -1,0 +1,8 @@
+Stop Loss Reinsurance Treaty
+
+Coverage triggers when:
+- Total losses exceed threshold
+
+Purpose:
+- Protects insurer from aggregate losses
+- Used for catastrophe protection

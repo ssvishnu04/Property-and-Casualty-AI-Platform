@@ -1,0 +1,18 @@
+[
+  {
+    "question": "Why is a hail claim with catastrophe exposure and litigation high risk?",
+    "ground_truth": "A hail claim with catastrophe exposure and litigation is high risk because catastrophe exposure may increase severity and litigation increases claim complexity and reserve needs. Claims guidelines recommend senior adjuster review and close reserve monitoring."
+  },
+  {
+    "question": "When does an excess of loss treaty apply?",
+    "ground_truth": "An excess of loss treaty applies when a covered claim exceeds the insurer retention. The reinsurer pays the amount above retention up to the treaty limit."
+  },
+  {
+    "question": "What should happen when suspicious indicators are present?",
+    "ground_truth": "Suspicious indicators should trigger investigation and possible referral to the Special Investigation Unit or fraud team."
+  },
+  {
+    "question": "Why should high severity claims be escalated?",
+    "ground_truth": "High severity claims should be escalated because they may require senior adjuster review, detailed investigation, and close reserve monitoring."
+  }
+]

@@ -1,0 +1,12 @@
+Fraud Indicators
+
+Common Red Flags:
+- Frequent claims
+- Late reporting
+- Inconsistent documentation
+- High-value claims with limited evidence
+- Litigation involvement
+
+Action:
+- Investigate suspicious claims
+- Escalate to fraud team

@@ -1,0 +1,51 @@
+name: Property & Casualty Domain Specialty AI Operations Console CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Python checks and tests
+    runs-on: ubuntu-latest
+
+    env:
+      API_HOST: 127.0.0.1
+      API_PORT: 8000
+      GROQ_API_KEY: dummy_key_for_ci
+      GROQ_MODEL: llama-3.1-8b-instant
+      EMBEDDING_MODEL: all-MiniLM-L6-v2
+      API_BASE_URL: http://127.0.0.1:8000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate key project files
+        run: |
+          test -f app/streamlit_app.py
+          test -f app/api_client.py
+          test -f api/main.py
+          test -f src/models/features.py
+
+      - name: Run unit tests
+        run: |
+          pytest tests -q

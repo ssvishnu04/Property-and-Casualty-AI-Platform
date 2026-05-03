@@ -1,0 +1,17 @@
+{
+  "claim_id": "CLM-TEST-001",
+  "policy_id": "POL-TEST-001",
+  "treaty_id": "TRT-TEST-001",
+  "line_of_business": "Commercial Property",
+  "loss_type": "Hail",
+  "state": "TX",
+  "claim_amount": 425000,
+  "reserve_amount": 500000,
+  "prior_claim_count": 3,
+  "litigation_flag": 1,
+  "cat_exposure": 1,
+  "treaty_type": "Excess of Loss",
+  "retention": 250000,
+  "treaty_limit": 2000000,
+  "claim_note": "Insured reported roof and interior water damage following a major hailstorm. Contractor estimate is high and attorney representation has been reported."
+}

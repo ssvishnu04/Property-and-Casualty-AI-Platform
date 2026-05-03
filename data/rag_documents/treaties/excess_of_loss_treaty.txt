@@ -1,0 +1,15 @@
+Excess of Loss Reinsurance Treaty
+
+Retention: $250,000
+Limit: $2,000,000
+
+Reinsurance applies when:
+- Claim exceeds retention
+- Loss is covered under policy
+
+Reinsurer pays:
+min(claim amount - retention, treaty limit)
+
+Implications:
+- High-value claims trigger reinsurance
+- Large catastrophe losses impact recovery
