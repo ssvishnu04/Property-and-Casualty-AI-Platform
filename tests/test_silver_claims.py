@@ -2,7 +2,7 @@ import pandas as pd
 
 from src.data_processing.silver_claims import (
     add_quality_flags,
-    deduplicate_claims,
+    deduplicate_by_key,
     standardize_column_names,
 )
 
@@ -66,7 +66,7 @@ def test_deduplicate_claims_keeps_latest():
         }
     )
 
-    result = deduplicate_claims(df)
+    result = deduplicate_by_key(df, "claim_id")
 
     assert len(result) == 1
     assert result["claim_amount"].iloc[0] == 200000

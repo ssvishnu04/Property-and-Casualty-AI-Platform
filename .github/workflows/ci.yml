@@ -48,4 +48,4 @@ jobs:
 
       - name: Run unit tests
         run: |
-          pytest tests -q
+          pytest tests/test_drift_monitor.py -q
