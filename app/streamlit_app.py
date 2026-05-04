@@ -18,7 +18,6 @@ from dashboard_utils import (
     load_monitoring_summary,
     load_portfolio_summary,
     load_prediction_drift_report,
-    load_prediction_logs,
     load_ragas_results,
     load_reinsurance_exposure,
     load_scored_claims,
@@ -213,6 +212,56 @@ def select_with_default(label: str, options: list[str], default_value: str, help
     )
 
 
+def binary_to_yes_no(value):
+    if pd.isna(value):
+        return ""
+
+    try:
+        return "Y" if int(value) == 1 else "N"
+    except Exception:
+        return value
+
+
+def format_audit_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    formatted_df = df.copy()
+
+    flag_columns = [
+        "fraud_risk_prediction",
+        "retention_breach_flag",
+        "high_priority_claim_flag",
+    ]
+
+    for column in flag_columns:
+        if column in formatted_df.columns:
+            formatted_df[column] = formatted_df[column].apply(binary_to_yes_no)
+
+    rename_map = {
+        "prediction_timestamp_utc": "Prediction Time",
+        "claim_id": "Claim ID",
+        "severity_prediction": "Severity",
+        "fraud_risk_prediction": "Fraud Risk",
+        "fraud_risk_probability": "Fraud Probability",
+        "recommended_reserve": "Recommended Reserve",
+        "triage_priority": "Triage Priority",
+        "retention_breach_flag": "Retention Breach",
+        "calculated_ceded_loss": "Ceded Loss",
+        "high_priority_claim_flag": "High Priority",
+    }
+
+    formatted_df = formatted_df.rename(columns=rename_map)
+
+    if "Fraud Probability" in formatted_df.columns:
+        formatted_df["Fraud Probability"] = formatted_df["Fraud Probability"].apply(format_percent)
+
+    if "Recommended Reserve" in formatted_df.columns:
+        formatted_df["Recommended Reserve"] = formatted_df["Recommended Reserve"].apply(format_currency)
+
+    if "Ceded Loss" in formatted_df.columns:
+        formatted_df["Ceded Loss"] = formatted_df["Ceded Loss"].apply(format_currency)
+
+    return formatted_df
+
+
 def build_claim_payload_from_sidebar() -> dict:
     st.sidebar.header("Real-Time Claim Setup")
 
@@ -240,25 +289,13 @@ def build_claim_payload_from_sidebar() -> dict:
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            claim_id = st.text_input(
-                "Claim ID",
-                defaults["claim_id"],
-                help="Unique claim identifier from the claims system.",
-            )
+            claim_id = st.text_input("Claim ID", defaults["claim_id"], help="Unique claim identifier from the claims system.")
 
         with col2:
-            policy_id = st.text_input(
-                "Policy ID",
-                defaults["policy_id"],
-                help="Policy linked to the claim.",
-            )
+            policy_id = st.text_input("Policy ID", defaults["policy_id"], help="Policy linked to the claim.")
 
         with col3:
-            treaty_id = st.text_input(
-                "Treaty ID",
-                defaults["treaty_id"],
-                help="Reinsurance treaty linked to the policy or claim.",
-            )
+            treaty_id = st.text_input("Treaty ID", defaults["treaty_id"], help="Reinsurance treaty linked to the policy or claim.")
 
         col4, col5, col6 = st.columns(3)
 
@@ -369,9 +406,7 @@ def build_claim_payload_from_sidebar() -> dict:
             )
 
     with st.expander("4. Document / Text Signals", expanded=False):
-        st.caption(
-            "These simulate signals extracted from adjuster notes, emails, phone summaries, or ACORD documents."
-        )
+        st.caption("These simulate signals extracted from adjuster notes, emails, phone summaries, or ACORD documents.")
 
         col1, col2, col3 = st.columns(3)
 
@@ -531,31 +566,16 @@ def render_real_time_scoring_tab():
         metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
 
         metric_col1.metric("Severity", prediction.get("severity_prediction"))
-        metric_col2.metric(
-            "Fraud Probability",
-            format_percent(prediction.get("fraud_risk_probability")),
-        )
-        metric_col3.metric(
-            "Recommended Reserve",
-            format_currency(prediction.get("recommended_reserve")),
-        )
+        metric_col2.metric("Fraud Probability", format_percent(prediction.get("fraud_risk_probability")))
+        metric_col3.metric("Recommended Reserve", format_currency(prediction.get("recommended_reserve")))
         metric_col4.metric("Triage Priority", prediction.get("triage_priority"))
 
         st.markdown("### Reinsurance Impact")
         re_col1, re_col2, re_col3 = st.columns(3)
 
-        re_col1.metric(
-            "Retention Breach",
-            "Yes" if prediction.get("retention_breach_flag") == 1 else "No",
-        )
-        re_col2.metric(
-            "Ceded Loss",
-            format_currency(prediction.get("calculated_ceded_loss")),
-        )
-        re_col3.metric(
-            "Recovery Ratio",
-            format_percent(prediction.get("reinsurance_recovery_ratio")),
-        )
+        re_col1.metric("Retention Breach", "Yes" if prediction.get("retention_breach_flag") == 1 else "No")
+        re_col2.metric("Ceded Loss", format_currency(prediction.get("calculated_ceded_loss")))
+        re_col3.metric("Recovery Ratio", format_percent(prediction.get("reinsurance_recovery_ratio")))
 
         col1, col2 = st.columns([1, 1])
 
@@ -578,92 +598,6 @@ def render_real_time_scoring_tab():
         st.error(f"API request failed: {exc}")
     except Exception as exc:
         st.error(f"Unexpected error: {exc}")
-
-
-def render_portfolio_dashboard_tab():
-    st.subheader("Portfolio Risk Dashboard")
-
-    df = load_portfolio_summary()
-
-    if df.empty:
-        st.warning("Portfolio summary not found. Run Step 5 Gold feature engineering.")
-        return
-
-    total_claims = int(df["claim_count"].sum()) if "claim_count" in df.columns else 0
-    total_claim_amount = df["total_claim_amount"].sum() if "total_claim_amount" in df.columns else 0
-    total_high_priority = (
-        df["high_priority_claim_count"].sum()
-        if "high_priority_claim_count" in df.columns
-        else 0
-    )
-
-    col1, col2, col3 = st.columns(3)
-
-    col1.metric("Total Claims", f"{total_claims:,}")
-    col2.metric("Total Claim Amount", format_currency(total_claim_amount))
-    col3.metric("High Priority Claims", f"{int(total_high_priority):,}")
-
-    st.markdown("#### Portfolio Summary")
-    st.table(df.head(50))
-
-    if "line_of_business" in df.columns and "total_claim_amount" in df.columns:
-        fig = px.bar(
-            df,
-            x="line_of_business",
-            y="total_claim_amount",
-            title="Total Claim Amount by Line of Business",
-        )
-        st.plotly_chart(fig, use_container_width=True)
-
-    if "line_of_business" in df.columns and "high_priority_rate" in df.columns:
-        fig = px.bar(
-            df,
-            x="line_of_business",
-            y="high_priority_rate",
-            title="High Priority Rate by Line of Business",
-        )
-        st.plotly_chart(fig, use_container_width=True)
-
-    st.caption(
-        "This dashboard updates when the Gold feature engineering pipeline refreshes "
-    )
-
-
-def render_reinsurance_tab():
-    st.subheader("Reinsurance Exposure Dashboard")
-
-    df = load_reinsurance_exposure()
-
-    if df.empty:
-        st.warning("Reinsurance exposure file not found. Run Step 5 Gold feature engineering.")
-        return
-
-    total_ceded = df["total_ceded_loss"].sum() if "total_ceded_loss" in df.columns else 0
-    total_claim_amount = df["total_claim_amount"].sum() if "total_claim_amount" in df.columns else 0
-    breach_count = (
-        df["retention_breach_count"].sum()
-        if "retention_breach_count" in df.columns
-        else 0
-    )
-
-    col1, col2, col3 = st.columns(3)
-
-    col1.metric("Total Ceded Loss", format_currency(total_ceded))
-    col2.metric("Total Claim Amount", format_currency(total_claim_amount))
-    col3.metric("Retention Breaches", f"{int(breach_count):,}")
-
-    st.markdown("#### Reinsurance Exposure")
-    st.table(df.head(50))
-
-    if "line_of_business" in df.columns and "total_ceded_loss" in df.columns:
-        fig = px.bar(
-            df,
-            x="line_of_business",
-            y="total_ceded_loss",
-            color="treaty_type" if "treaty_type" in df.columns else None,
-            title="Total Ceded Loss by Line of Business and Treaty Type",
-        )
-        st.plotly_chart(fig, use_container_width=True)
 
 
 def render_prediction_audit_tab():
@@ -721,8 +655,10 @@ def render_prediction_audit_tab():
 
     filtered_df = filtered_df.head(max_rows)
 
+    formatted_df = format_audit_dataframe(filtered_df[display_columns])
+
     st.dataframe(
-        filtered_df[display_columns],
+        formatted_df,
         use_container_width=True,
         hide_index=True,
     )
@@ -750,6 +686,90 @@ def render_prediction_audit_tab():
     )
 
 
+def render_portfolio_dashboard_tab():
+    st.subheader("Portfolio Risk Dashboard")
+
+    df = load_portfolio_summary()
+
+    if df.empty:
+        st.warning("Portfolio summary not found. Run Step 5 Gold feature engineering.")
+        return
+
+    total_claims = int(df["claim_count"].sum()) if "claim_count" in df.columns else 0
+    total_claim_amount = df["total_claim_amount"].sum() if "total_claim_amount" in df.columns else 0
+    total_high_priority = (
+        df["high_priority_claim_count"].sum()
+        if "high_priority_claim_count" in df.columns
+        else 0
+    )
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Total Claims", f"{total_claims:,}")
+    col2.metric("Total Claim Amount", format_currency(total_claim_amount))
+    col3.metric("High Priority Claims", f"{int(total_high_priority):,}")
+
+    st.markdown("#### Portfolio Summary")
+    st.table(df.head(50))
+
+    if "line_of_business" in df.columns and "total_claim_amount" in df.columns:
+        fig = px.bar(
+            df,
+            x="line_of_business",
+            y="total_claim_amount",
+            title="Total Claim Amount by Line of Business",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    if "line_of_business" in df.columns and "high_priority_rate" in df.columns:
+        fig = px.bar(
+            df,
+            x="line_of_business",
+            y="high_priority_rate",
+            title="High Priority Rate by Line of Business",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.caption("This dashboard updates when the Gold feature engineering pipeline refreshes.")
+
+
+def render_reinsurance_tab():
+    st.subheader("Reinsurance Exposure Dashboard")
+
+    df = load_reinsurance_exposure()
+
+    if df.empty:
+        st.warning("Reinsurance exposure file not found. Run Step 5 Gold feature engineering.")
+        return
+
+    total_ceded = df["total_ceded_loss"].sum() if "total_ceded_loss" in df.columns else 0
+    total_claim_amount = df["total_claim_amount"].sum() if "total_claim_amount" in df.columns else 0
+    breach_count = (
+        df["retention_breach_count"].sum()
+        if "retention_breach_count" in df.columns
+        else 0
+    )
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Total Ceded Loss", format_currency(total_ceded))
+    col2.metric("Total Claim Amount", format_currency(total_claim_amount))
+    col3.metric("Retention Breaches", f"{int(breach_count):,}")
+
+    st.markdown("#### Reinsurance Exposure")
+    st.table(df.head(50))
+
+    if "line_of_business" in df.columns and "total_ceded_loss" in df.columns:
+        fig = px.bar(
+            df,
+            x="line_of_business",
+            y="total_ceded_loss",
+            color="treaty_type" if "treaty_type" in df.columns else None,
+            title="Total Ceded Loss by Line of Business and Treaty Type",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+
 def render_model_monitoring_tab():
     st.subheader("Model Monitoring")
 
@@ -758,13 +778,35 @@ def render_model_monitoring_tab():
     if metadata:
         st.markdown("#### Champion Model Metadata")
         st.json(metadata)
+
+        st.markdown("#### Model Performance Summary")
+
+        summary_rows = []
+
+        for target_name, model_info in metadata.items():
+            summary_rows.append(
+                {
+                    "Model Target": target_name.title(),
+                    "Champion Algorithm": model_info.get("model_name", "N/A"),
+                    "Selection Metric": model_info.get("metric", "N/A"),
+                    "Score": model_info.get("score", "N/A"),
+                    "Artifact Path": model_info.get("artifact_path", "N/A"),
+                }
+            )
+
+        summary_df = pd.DataFrame(summary_rows)
+        st.dataframe(summary_df, use_container_width=True, hide_index=True)
+
     else:
         st.warning("Champion metadata not found.")
 
     comparison_df = load_model_comparison()
 
     if comparison_df.empty:
-        st.warning("Model comparison summary not found.")
+        st.info(
+            "Detailed model comparison file is not available in this deployment. "
+            "Champion model metadata and summary are shown above."
+        )
         return
 
     st.markdown("#### Model Comparison Results")
@@ -829,9 +871,7 @@ def render_rag_evaluation_tab():
     st.markdown("#### Detailed RAGAS Evaluation Results")
     st.table(df.head(100))
 
-    st.caption(
-        "RAGAS results are refreshed when the evaluation job runs, not on every prediction."
-    )
+    st.caption("RAGAS results are refreshed when the evaluation job runs, not on every prediction.")
 
 
 def render_monitoring_drift_tab():
@@ -842,9 +882,7 @@ def render_monitoring_drift_tab():
     prediction_drift_df = load_prediction_drift_report()
 
     if not summary:
-        st.warning(
-            "Monitoring summary not found"
-        )
+        st.warning("Monitoring summary not found")
         return
 
     status = summary.get("status", "unknown")
@@ -938,9 +976,7 @@ def render_batch_scoring_tab():
     df = load_scored_claims()
 
     if df.empty:
-        st.warning(
-            "Scored claims not found."
-        )
+        st.warning("Scored claims not found.")
         return
 
     total_scored = len(df)
@@ -956,6 +992,7 @@ def render_batch_scoring_tab():
     col4.metric("Total Recommended Reserve", format_currency(total_reserve))
 
     st.markdown("#### Scored Claims Sample")
+
     display_cols = [
         col for col in [
             "claim_id",
@@ -975,19 +1012,11 @@ def render_batch_scoring_tab():
     st.table(df[display_cols].head(50))
 
     if "triage_priority" in df.columns:
-        fig = px.histogram(
-            df,
-            x="triage_priority",
-            title="Batch Scored Claims by Triage Priority",
-        )
+        fig = px.histogram(df, x="triage_priority", title="Batch Scored Claims by Triage Priority")
         st.plotly_chart(fig, use_container_width=True)
 
     if "severity_prediction" in df.columns:
-        fig = px.histogram(
-            df,
-            x="severity_prediction",
-            title="Batch Scored Claims by Severity",
-        )
+        fig = px.histogram(df, x="severity_prediction", title="Batch Scored Claims by Severity")
         st.plotly_chart(fig, use_container_width=True)
 
     if "fraud_risk_probability" in df.columns:
@@ -1022,16 +1051,11 @@ def render_batch_scoring_tab():
         high_risk_df = high_risk_df[high_risk_df["triage_priority"] == "Urgent"]
 
     if "fraud_risk_probability" in high_risk_df.columns:
-        high_risk_df = high_risk_df.sort_values(
-            "fraud_risk_probability",
-            ascending=False,
-        )
+        high_risk_df = high_risk_df.sort_values("fraud_risk_probability", ascending=False)
 
     st.table(high_risk_df[display_cols].head(25))
 
-    st.caption(
-        "This tab is based on batch scoring output."
-    )
+    st.caption("This tab is based on batch scoring output.")
 
 
 def main():
@@ -1040,10 +1064,10 @@ def main():
     tabs = st.tabs(
         [
             "Real-Time Claim Scoring",
+            "Prediction Audit",
             "Batch Scored Claims",
             "Portfolio Risk",
             "Reinsurance Exposure",
-            "Prediction Audit",
             "Model Monitoring",
             "RAG Evaluation",
             "Monitoring & Drift",
@@ -1054,16 +1078,16 @@ def main():
         render_real_time_scoring_tab()
 
     with tabs[1]:
-        render_batch_scoring_tab()
+        render_prediction_audit_tab()
 
     with tabs[2]:
-        render_portfolio_dashboard_tab()
+        render_batch_scoring_tab()
 
     with tabs[3]:
-        render_reinsurance_tab()
+        render_portfolio_dashboard_tab()
 
     with tabs[4]:
-        render_prediction_audit_tab()
+        render_reinsurance_tab()
 
     with tabs[5]:
         render_model_monitoring_tab()
