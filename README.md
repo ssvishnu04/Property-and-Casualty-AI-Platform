@@ -1,165 +1,316 @@
-# Property & Casualty Insurance & Reinsurance AI Risk Platform
+# P&C Insurance AI Risk & Reinsurance Analytics Platform
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-green)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
+![LangChain](https://img.shields.io/badge/LangChain-RAG-orange)
+![FAISS](https://img.shields.io/badge/FAISS-VectorSearch-purple)
+![Docker](https://img.shields.io/badge/Docker-Containerization-blue)
+![MLflow](https://img.shields.io/badge/MLflow-MLOps-lightblue)
+![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-black)
 
-A **production-style AI platform** for real-time claim risk scoring, reinsurance analytics, and GenAI-powered explanations using **Machine Learning + RAG architecture**.
+Enterprise style AI platform designed for Property & Casualty (P&C) insurance and reinsurance environments, combining Machine Learning, Retrieval Augmented Generation (RAG), near real-time risk scoring, reinsurance analytics, and MLOps observability workflows.
 
 ---
-## Live Demo
+## Project Link
 
-**Streamlit App (Frontend UI)**  
-https://propertycasualty-reinsurance-risk-platform.streamlit.app  
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://propertycasualty-reinsurance-risk-platform.streamlit.app/)
+
+---
+# Executive Summary
+
+This project demonstrates how enterprise AI systems can support Property & Casualty insurance workflows using Machine Learning, Generative AI, and cloud native data engineering patterns.
+
+The platform simulates a production style insurance AI environment used by:
+- Claims Adjusters
+- Fraud Investigation Teams
+- Risk Analysts
+- Reinsurance Operations Teams
+- Claims Management Organizations
+
+The solution combines:
+- ML based risk prediction
+- Fraud scoring workflows
+- Reinsurance analytics
+- RAG based explainable AI
+- Audit logging and monitoring
+- Lakehouse style data architecture
+- API driven deployment patterns
+- MLOps observability workflows
+
 ---
 
-## Application Screenshots
+# Business Problem
 
-### Real-Time Claim Scoring
+Insurance organizations process large volumes of claims requiring:
+- Severity assessment
+- Fraud evaluation
+- Reserve estimation
+- Reinsurance exposure analysis
+- Explainable decision support
+
+Traditional claims workflows often rely heavily on:
+- Manual document review
+- Static business rules
+- Limited explainability
+- Delayed triage decisions
+
+This platform demonstrates how AI driven workflows can improve claims prioritization, fraud detection, and operational decision support while maintaining explainability and monitoring controls.
+
+---
+# Application Screenshots
+
+## Near Real-Time Claim Scoring
 ![Real Time](data/images/ApplicationScreen.jpg)
 
-### Prediction Audit Dashboard
+## Prediction Audit Dashboard
 ![Audit Logs](data/images/PredictionAudit.jpg)
 
-### GenAI Explanation (RAG)
+## GenAI Explanation (RAG)
 ![RAG](data/images/RagExplanation.jpg)
 
-### Model Monitoring
+## Model Monitoring & Drift Detection
 ![Monitoring](data/images/Monitoring_Drift.jpg)
 
 ---
-## Overview
 
-This project simulates a **real-world AI platform used in Property & Casualty insurance** by:
+# Enterprise Features
 
-- Claims adjusters  
-- Fraud analysts  
-- Risk & reinsurance teams 
+- Near real-time claim scoring
+- Fraud risk prediction
+- Reserve estimation workflows
+- Reinsurance exposure analytics
+- RAG based explainable AI
+- Prediction audit logging
+- ML monitoring & observability
+- Lakehouse style data architecture
+- REST API integration
+- CI/CD deployment workflows
 
-It combines:
+---
+# Core Capabilities
 
-* Machine Learning (risk & fraud prediction)
-* Reinsurance analytics (ceded loss, retention)
-* Generative AI (RAG-based explanations)
-* MLOps (audit logs, drift monitoring, CI/CD)
+## Near Real-Time Claim Scoring
+
+The platform predicts:
+- Claim severity classification
+- Fraud probability scoring
+- Recommended reserve estimation
+- Claims triage priority
+
+Outputs support faster operational decision making for claims teams.
 
 ---
 
-## Key Features
+## Reinsurance Analytics
 
-### Real-Time Claim Scoring
+The system includes:
+- Retention breach detection
+- Ceded loss calculations
+- Recovery ratio estimation
+- Reinsurance exposure analysis
 
-* Severity prediction (Low / Medium / High)
-* Fraud probability scoring
-* Recommended reserve
-* Triage priority (Urgent / Standard)
-
-### Reinsurance Analytics
-
-* Retention breach detection
-* Ceded loss calculation
-* Recovery ratio estimation
-
-### GenAI (RAG Explanation)
-
-* Context-aware explanations using LLM
-* Combines structured claim data + unstructured documents (notes , emails , Accord XML)
-* Improves trust and explainability
-
-### Monitoring & Audit (MLOps)
-
-* Prediction audit logs
-* Feature & prediction drift detection
-* Model Performance tracking
+These workflows simulate operational reinsurance analytics used in enterprise insurance environments.
 
 ---
-## Example Use Case
+
+## RAG Based Explainable AI
+
+The GenAI layer generates contextual explanations using:
+- Structured claims data
+- Claim notes
+- Adjuster emails
+- Accord XML documents
+- Reinsurance documents
+
+The platform combines semantic retrieval with LLM generated responses to improve explainability and operational transparency.
+
+---
+
+## MLOps & Observability
+
+The platform incorporates:
+- Prediction audit logging
+- Model drift monitoring
+- Prediction quality tracking
+- Inference monitoring workflows
+- CI/CD deployment automation
+
+---
+
+# Enterprise Architecture
+
+## High Level Workflow
+
+```text
+User Request (Streamlit UI)
+        ↓
+FastAPI Inference Layer
+        ↓
+ML Prediction Services
+ ├── Claim Severity Model
+ ├── Fraud Risk Model
+ ├── Reserve Estimation Model
+        ↓
+RAG Orchestration Layer
+        ├── Claim Notes
+        ├── Adjuster Emails
+        ├── Accord XML
+        ├── Reinsurance Documents
+        ↓
+FAISS Semantic Vector Search
+        ↓
+LLM Explanation Generation
+        ↓
+Prediction + Explainable AI Response
+        ↓
+Audit Logging & Monitoring
+```
+
+---
+
+# Lakehouse Data Pipeline
+
+The platform follows a Lakehouse-style data architecture:
+
+```text
+Bronze Layer (Raw Ingestion)
+        ↓
+Silver Layer (Cleaning & Standardization)
+        ↓
+Gold Layer (Feature Engineering & Analytics)
+        ↓
+ML Models + RAG Workflows
+```
+
+---
+
+# Governance & Explainability
+
+The platform incorporates explainable AI workflows designed for regulated insurance environments:
+
+- Source grounded AI explanations
+- Structured claim context prioritization
+- Prediction audit logging
+- Drift monitoring workflows
+- Explainable risk factor summaries
+- Controlled retrieval pipelines for GenAI responses
+
+---
+
+# Example Use Case
+
 A claims adjuster submits a new claim:
 
-- Loss Type: **Hail**
-- State: **TX**
-- Claim Amount: **$425,000**
+| Input | Value |
+|---|---|
+| Loss Type | Hail |
+| State | TX |
+| Claim Amount | $425,000 |
 
-### System Output:
-- Severity → **High**
-- Fraud Risk → **Low**
-- Recommended Reserve → **$434K**
-- Triage Priority → **Urgent**
-- Reinsurance → **Retention breached → Ceded loss triggered**
-- GenAI → **Explains risk drivers + recommended actions**
+## System Output
 
-**Outcome:** Faster triage, reduced manual review, better financial decisions
+| Output | Result |
+|---|---|
+| Severity | High |
+| Fraud Risk | Low |
+| Recommended Reserve | $434K |
+| Triage Priority | Urgent |
+| Reinsurance | Retention breached → Ceded loss triggered |
+| GenAI Explanation | Risk drivers + recommended actions |
 
----
+### Outcome
 
-## Architecture
-
-### High-Level Flow
-
-```
-Streamlit UI (User)
-→ FastAPI (Backend)
-→ ML Models (Risk + Fraud + Reserve)
-→ RAG Pipeline (LangChain + FAISS)
-→ Response (Prediction + Explanation)
-```
-
-### Data Pipeline (Lakehouse Style)
-
-```
-Bronze Layer (Ingestion)
-→ Silver Layer (Cleaning + Standardization)
-→ Gold Layer (Feature Engineering)
-→ ML + GenAI
-```
+- Faster claims triage
+- Reduced manual review effort
+- Improved operational visibility
+- Better reserve and reinsurance decision support
 
 ---
 
-## Tech Stack
+# Technology Stack
 
-| Layer      | Tools                       |
-| ---------- | --------------------------- |
-| Frontend   | Streamlit                   |
-| Backend    | FastAPI                     |
-| ML         | Scikit-learn                |
-| GenAI      | LangChain + Groq            |
-| Vector DB  | FAISS                       |
-| Embeddings | Hugging Face                |
-| Data Pipeline| Pandas                    |
-| Deployment | Docker, Hugging Face Spaces |
-| CI/CD      | GitHub Actions              |
+| Layer | Technologies |
+|---|---|
+| Frontend | Streamlit |
+| Backend | FastAPI |
+| Machine Learning | Scikit-learn |
+| GenAI | LangChain + Groq |
+| Vector Search | FAISS |
+| Embeddings | Hugging Face |
+| Data Engineering | Pandas |
+| Deployment | Docker |
+| CI/CD | GitHub Actions |
 
 ---
 
+# Repository Structure
 
-## Project Structure
-
-```
-api/            → FastAPI backend (inference + APIs)
-app/            → Streamlit frontend (UI dashboards)
-src/            → Data pipelines, ML models, RAG logic
-data/           → Bronze / Silver / Gold layers
-tests/          → Unit tests
+```text
+project/
+│
+├── api/              → FastAPI backend services
+├── app/              → Streamlit frontend dashboards
+├── src/              → ML pipelines & RAG workflows
+├── data/             → Bronze / Silver / Gold datasets
+├── vectorstore/      → FAISS vector indexes
+├── monitoring/       → Drift monitoring workflows
+├── evaluation/       → ML evaluation & testing
+├── tests/            → Unit tests
+├── screenshots/      → Application screenshots
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## Deployment
+# Deployment Architecture
 
-* FastAPI deployed on Hugging Face Spaces (Docker)
-* Streamlit deployed on Streamlit Cloud
-* CI/CD via GitHub Actions
-
----
-
-## Business Impact
-
-* Faster claim triage
-* Improved fraud detection
-* Transparent AI decisions
-* Better reinsurance risk visibility
+The platform supports:
+- Streamlit Cloud deployment
+- Dockerized FastAPI services
+- GitHub Actions CI/CD workflows
+- Cloud ready deployment architecture patterns
 
 ---
 
-## 👨‍💻 Author
+# Business Impact
+
+- Accelerated claims triage and investigation workflows
+- Improved fraud risk visibility using ML driven scoring
+- Enhanced explainability through RAG based AI responses
+- Reduced manual review effort for claims operations teams
+- Improved reinsurance exposure analysis and reserve visibility
+- Demonstrated enterprise AI and MLOps implementation patterns for regulated insurance environments
+
+---
+
+# Future Enhancements
+
+- Azure Databricks integration
+- MLflow experiment tracking
+- Real time streaming ingestion
+- Enterprise RBAC integration
+- Human-in-the-loop review workflows
+- Advanced drift analytics
+- Vector database scalability enhancements
+
+---
+
+# Disclaimer
+
+This project is intended for:
+- Educational purposes
+- Portfolio demonstrations
+- Enterprise AI architecture simulations
+
+No real customer, claims, policyholder, or reinsurance data is used.
+
+---
+
+# 👨‍💻 Author
 
 Vishnu Yadavalli
-Senior ML / Data Engineering Leader
 
 ---
+
+⭐ Enterprise-style AI platform demonstrating practical Machine Learning, RAG, reinsurance analytics, and MLOps implementation patterns for regulated insurance environments.
